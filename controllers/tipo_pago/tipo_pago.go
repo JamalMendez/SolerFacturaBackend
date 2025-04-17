@@ -41,6 +41,10 @@ func GetAll() ([]TipoPagoDTO, error) {
 		return nil, result.Error
 	}
 
+	if result.RowsAffected == 0 {
+		return nil, errors.New("no se encontraron tipos de pago")
+	}
+
 	return tipoPagos, nil
 }
 
@@ -54,6 +58,10 @@ func GetById(id uint) (TipoPagoDTO, error) {
 
 	if result.Error != nil {
 		return TipoPagoDTO{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return TipoPagoDTO{}, errors.New("no se encontro ningun tipo de pago")
 	}
 
 	return *tipoPago, nil
