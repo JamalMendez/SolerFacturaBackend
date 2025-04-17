@@ -20,14 +20,15 @@ func (h *TipoPagoHandler) CreateTipoPago(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewDecoder(r.Body).Decode(&h); err != nil {
-		http.Error(w, `{"error": "Invalid request payload"}`, http.StatusBadRequest)
+		response := fmt.Sprintf(`{"error": "Invalid request payload", "details": "%s"}`, err.Error())
+		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
 
 	tipoPago, err := tipo_pago.Create(h.Descripcion)
 
 	if err != nil {
-		response := fmt.Sprintf(`{"error": "Failed to create tipo pago", "details": %s}`, err.Error())
+		response := fmt.Sprintf(`{"error": "Failed to create tipo pago", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
@@ -47,7 +48,7 @@ func (h *TipoPagoHandler) GetAllTipoPago(w http.ResponseWriter, r *http.Request)
 	tipoPagos, err := tipo_pago.GetAll()
 
 	if err != nil {
-		response := fmt.Sprintf(`{"error": "Failed to get tipo pagos", "details": %s}`, err.Error())
+		response := fmt.Sprintf(`{"error": "Failed to get tipo pagos", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
@@ -61,13 +62,14 @@ func (h *TipoPagoHandler) GetByIdTipoPago(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, `{"error": "Invalid user ID"}`, http.StatusBadRequest)
+		response := fmt.Sprintf(`{"error": "Invalid user ID", "details": "%s"}`, err.Error())
+		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
 
 	tipoPago, err := tipo_pago.GetById(uint(id))
 	if err != nil {
-		response := fmt.Sprintf(`{"error": "Failed to get tipo pago", "details": %s}`, err.Error())
+		response := fmt.Sprintf(`{"error": "Failed to get tipo pago", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
@@ -87,17 +89,19 @@ func (h *TipoPagoHandler) UpdateTipoPago(w http.ResponseWriter, r *http.Request)
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, `{"error": "Invalid user ID"}`, http.StatusBadRequest)
+		response := fmt.Sprintf(`{"error": "Invalid user ID", "details": "%s"}`, err.Error())
+		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&h); err != nil {
-		http.Error(w, `{"error": "Invalid request payload"}`, http.StatusBadRequest)
+		response := fmt.Sprintf(`{"error": "Invalid request payload", "details": "%s"}`, err.Error())
+		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
 
 	if err := tipo_pago.Update(h.Descripcion, uint(id)); err != nil {
-		response := fmt.Sprintf(`{"error": "Failed to update tipo pago", "details": %s}`, err.Error())
+		response := fmt.Sprintf(`{"error": "Failed to update tipo pago", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
@@ -111,12 +115,13 @@ func (h *TipoPagoHandler) DeleteTipoPago(w http.ResponseWriter, r *http.Request)
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, `{"error": "Invalid user ID"}`, http.StatusBadRequest)
+		response := fmt.Sprintf(`{"error": "Invalid user ID", "details": "%s"}`, err.Error())
+		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}
 
 	if err := tipo_pago.Delete(uint(id)); err != nil {
-		response := fmt.Sprintf(`{"error": "Failed to delete tipo pago", "details": %s}`, err.Error())
+		response := fmt.Sprintf(`{"error": "Failed to delete tipo pago", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return
 	}

@@ -17,9 +17,11 @@ func InitRouter() *mux.Router {
 
 	tipoProductoHandler := handlers.NewTipoProductoHandler()
 	tipoPagoHandler := handlers.NewTipoPagoHandler()
+	ncfHandler := handlers.NewNCFHandler()
 
 	registerTipoProductoRoutes(r, tipoProductoHandler)
 	registerTipoPagoRoutes(r, tipoPagoHandler)
+	registerNCFRoutes(r, ncfHandler)
 
 	return router
 }

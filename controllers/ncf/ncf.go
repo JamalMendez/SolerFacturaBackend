@@ -51,6 +51,10 @@ func GetAll() ([]NCFDTO, error) {
 		return nil, result.Error
 	}
 
+	if result.RowsAffected == 0 {
+		return nil, errors.New("no se encontraron ncfs")
+	}
+
 	return ncfs, nil
 }
 
@@ -64,6 +68,10 @@ func GetById(id uint) (NCFDTO, error) {
 
 	if result.Error != nil {
 		return NCFDTO{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return NCFDTO{}, errors.New("no se encontro ningun ncf")
 	}
 
 	return *ncf, nil
