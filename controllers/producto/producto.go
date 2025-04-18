@@ -52,6 +52,10 @@ func GetAll() ([]ProductoDTO, error) {
 		return productos, result.Error
 	}
 
+	if result.RowsAffected == 0 {
+		return productos, errors.New("no se encontraron productos")
+	}
+
 	return productos, nil
 }
 
@@ -65,6 +69,10 @@ func GetById(id uint) (ProductoDTO, error) {
 
 	if result.Error != nil {
 		return *producto, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return *producto, errors.New("no se encontro ningun producto")
 	}
 
 	return *producto, nil
