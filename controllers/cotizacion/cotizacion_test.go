@@ -3,7 +3,6 @@ package cotizacion
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"ggstudios/solerfacturabackend/db_connection"
 )
@@ -35,7 +34,7 @@ func TestCreate(t *testing.T) {
 	descripcion := "Descripcion Example"
 	enDolares := false
 
-	cotizacion, err := Create(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, secuencia, cliente, descripcion, enDolares, time.Time{})
+	cotizacion, err := Create(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, secuencia, cliente, descripcion, enDolares)
 	if err != nil {
 		t.Errorf("Error creating cotizacion: %v", err)
 	}

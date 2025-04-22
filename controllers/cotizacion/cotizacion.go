@@ -22,7 +22,20 @@ type CotizacionDTO struct {
 	EnDolares        bool
 }
 
-func Create(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio uint, secuencia, cliente, descripcion string, enDolares bool, fechaVencimiento time.Time) (db_connection.Cotizacion, error) {
+type CotizacionDTOSend struct {
+	ID            uint
+	NCF           uint
+	TipoPago      uint
+	Cliente       uint
+	CostoSubtotal uint
+	CostoTotal    uint
+	Descuento     uint
+	Envio         uint
+	Descripcion   string
+	EnDolares     bool
+}
+
+func Create(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio uint, secuencia, cliente, descripcion string, enDolares bool) (db_connection.Cotizacion, error) {
 	cotizacion := db_connection.Cotizacion{
 		Secuencia:     secuencia,
 		CLI_id:        cli_id,
@@ -36,7 +49,7 @@ func Create(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio uint, se
 		Descripcion:   descripcion,
 	}
 
-	err := dataValidation(&cli_id, &tpo_id, &costoSubtotal, &costoTotal, &secuencia, &cliente, &descripcion, &fechaVencimiento)
+	err := dataValidation(&cli_id, &tpo_id, &costoSubtotal, &costoTotal, &secuencia, &cliente, &descripcion)
 	if err != nil {
 		return cotizacion, err
 	}
@@ -115,7 +128,7 @@ func Update(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, id uint
 		return errors.New("no se encontro ningun cotizacion")
 	}
 
-	err := dataValidation(&cli_id, &tpo_id, &costoSubtotal, &costoTotal, &secuencia, &cliente, &descripcion, &fechaVencimiento)
+	err := dataValidation(&cli_id, &tpo_id, &costoSubtotal, &costoTotal, &secuencia, &cliente, &descripcion)
 	if err != nil {
 		return err
 	}
@@ -129,7 +142,6 @@ func Update(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, id uint
 	cotizacion.Envio = envio
 	cotizacion.Descuento = descuento
 	cotizacion.Cliente = cliente
-	cotizacion.FechaVencimiento = fechaVencimiento
 	cotizacion.EnDolares = enDolares
 
 	result = db_connection.Db.Save(cotizacion)
@@ -163,8 +175,7 @@ func Delete(id uint) error {
 	return nil
 }
 
-func dataValidation(cli_id, tpo_id, costoSubtotal, costoTotal *uint, secuencia, cliente, descripcion *string, fechaVencimiento *time.Time) error {
-
+func dataValidation(cli_id, tpo_id, costoSubtotal, costoTotal *uint, secuencia, cliente, descripcion *string) error {
 	if *secuencia == "" {
 		return errors.New("secuencia no puede estar vacío")
 	}

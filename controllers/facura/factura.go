@@ -1,4 +1,4 @@
-package facura
+package factura
 
 import (
 	"errors"
@@ -20,6 +20,20 @@ type FacturaDTO struct {
 	Envio            uint
 	Descripcion      string
 	FechaCreacion    time.Time
+	FechaVencimiento time.Time
+	EnDolares        bool
+}
+
+type FacturaDTOSend struct {
+	ID               uint
+	NCF              uint
+	TipoPago         uint
+	Cliente          uint
+	CostoSubtotal    uint
+	CostoTotal       uint
+	Descuento        uint
+	Envio            uint
+	Descripcion      string
 	FechaVencimiento time.Time
 	EnDolares        bool
 }

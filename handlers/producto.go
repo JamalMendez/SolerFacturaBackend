@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"ggstudios/solerfacturabackend/controllers/producto"
-	"ggstudios/solerfacturabackend/db_connection"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-type ProductoHandler db_connection.Producto
+type ProductoHandler producto.ProductoDTOSend
 
 func NewProductoHandler() *ProductoHandler {
 	return &ProductoHandler{}
@@ -26,7 +25,7 @@ func (h *ProductoHandler) CreateProducto(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	producto, err := producto.Create(h.Descripcion, h.Costo, h.CostoEnDolares, h.TPR_id)
+	producto, err := producto.Create(h.Descripcion, h.Costo, h.CostoEnDolares, h.TipoProducto)
 	if err != nil {
 		response := fmt.Sprintf(`{"error": "Failed to create producto", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
@@ -96,7 +95,7 @@ func (h *ProductoHandler) UpdateProducto(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := producto.Update(h.Descripcion, h.Costo, h.CostoEnDolares, h.TPR_id, uint(id)); err != nil {
+	if err := producto.Update(h.Descripcion, h.Costo, h.CostoEnDolares, h.TipoProducto, uint(id)); err != nil {
 		response := fmt.Sprintf(`{"error": "Failed to update producto", "details": "%s"}`, err.Error())
 		http.Error(w, response, http.StatusInternalServerError)
 		return

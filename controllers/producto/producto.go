@@ -14,6 +14,14 @@ type ProductoDTO struct {
 	CostoEnDolares uint
 }
 
+type ProductoDTOSend struct {
+	ID             uint
+	TipoProducto   uint
+	Descripcion    string
+	Costo          uint
+	CostoEnDolares uint
+}
+
 func Create(descripcion string, costo, costoEnDolares, tpr_id uint) (db_connection.Producto, error) {
 	producto := db_connection.Producto{Descripcion: descripcion, Costo: costo, TPR_id: tpr_id, CostoEnDolares: costoEnDolares}
 

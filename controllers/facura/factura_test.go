@@ -1,4 +1,4 @@
-package facura
+package factura
 
 import (
 	"fmt"
