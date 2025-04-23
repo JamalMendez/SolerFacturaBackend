@@ -2,7 +2,6 @@ package factura_descripcion
 
 import (
 	"errors"
-	"fmt"
 
 	"ggstudios/solerfacturabackend/db_connection"
 )
@@ -18,7 +17,7 @@ type ProductoDTO struct {
 	ITBIS          bool
 }
 
-func Create(facturaId uint, productos []ProductoDTO) error {
+func Create(facturaId uint, productos []ProductoDTO) ([]db_connection.FacturaDesc, error) {
 	facturas := make([]db_connection.FacturaDesc, 0)
 
 	for _, producto := range productos {
@@ -36,12 +35,10 @@ func Create(facturaId uint, productos []ProductoDTO) error {
 	result := db_connection.Db.Create(&facturas)
 
 	if result.Error != nil {
-		return result.Error
+		return facturas, result.Error
 	}
 
-	fmt.Println("Filas: ", result.RowsAffected)
-
-	return nil
+	return facturas, nil
 }
 
 func GetById(id uint) ([]ProductoDTO, error) {
@@ -55,7 +52,9 @@ func GetById(id uint) ([]ProductoDTO, error) {
 		return productos, result.Error
 	}
 
-	fmt.Println(productos)
+	if result.RowsAffected == 0 {
+		return productos, errors.New("no se encontraron productos para la factura")
+	}
 
 	return productos, nil
 }
@@ -65,7 +64,7 @@ func Update(facturaId uint, productos []ProductoDTO) error {
 		return errors.New("no se pudo eliminar los productos de la factura")
 	}
 
-	if err := Create(facturaId, productos); err != nil {
+	if _, err := Create(facturaId, productos); err != nil {
 		return errors.New("no se pudo crear los productos de la factura")
 	}
 

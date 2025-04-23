@@ -61,7 +61,6 @@ type Factura struct {
 	Envio            uint
 	Descripcion      string     `gorm:"type:text"`
 	EnDolares        bool       `gorm:"not null;default:false"`
-	FechaCreacion    time.Time  `gorm:"not null;default:GETDATE()"`
 	FechaVencimiento time.Time  `gorm:"not null"`
 	Productos        []Producto `gorm:"many2many:factura_descs;"`
 }
@@ -87,7 +86,6 @@ type Cotizacion struct {
 	Envio         uint
 	Descripcion   string     `gorm:"type:text"`
 	EnDolares     bool       `gorm:"not null;default:false"`
-	FechaCreacion time.Time  `gorm:"not null;default:GETDATE()"`
 	Productos     []Producto `gorm:"many2many:cotizacion_descs;"`
 }
 

@@ -67,6 +67,10 @@ func GetAll() ([]ClienteDTO, error) {
 		return nil, result.Error
 	}
 
+	if result.RowsAffected == 0 {
+		return nil, errors.New("no se encontro ningun cliente")
+	}
+
 	return clientes, nil
 }
 
@@ -80,6 +84,10 @@ func GetById(id uint) (ClienteDTO, error) {
 
 	if result.Error != nil {
 		return ClienteDTO{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return ClienteDTO{}, errors.New("no se encontro ningun cliente")
 	}
 
 	return *cliente, nil

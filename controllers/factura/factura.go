@@ -26,9 +26,10 @@ type FacturaDTO struct {
 
 type FacturaDTOSend struct {
 	ID               uint
-	NCF              uint
-	TipoPago         uint
-	Cliente          uint
+	NCFID            uint
+	TipoPagoID       uint
+	ClienteID        uint
+	Cliente          string
 	CostoSubtotal    uint
 	CostoTotal       uint
 	Descuento        uint
@@ -80,7 +81,7 @@ func GetAll() ([]FacturaDTO, error) {
 			"facturas.envio, " +
 			"facturas.descripcion," +
 			"facturas.en_dolares," +
-			"facturas.created_at," +
+			"facturas.created_at FechaCreacion," +
 			"facturas.fecha_vencimiento," +
 			"ncfs.serie NCFSerie," +
 			"ncfs.tipo NCFTipo," +
@@ -92,6 +93,10 @@ func GetAll() ([]FacturaDTO, error) {
 
 	if result.Error != nil {
 		return facturas, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return facturas, errors.New("no se encontraron facturas")
 	}
 
 	return facturas, nil
@@ -109,7 +114,7 @@ func GetById(id uint) (FacturaDTO, error) {
 			"facturas.envio, "+
 			"facturas.descripcion,"+
 			"facturas.en_dolares,"+
-			"facturas.created_at,"+
+			"facturas.created_at FechaCreacion,"+
 			"facturas.fecha_vencimiento,"+
 			"ncfs.serie NCFSerie,"+
 			"ncfs.tipo NCFTipo,"+
@@ -121,6 +126,10 @@ func GetById(id uint) (FacturaDTO, error) {
 
 	if result.Error != nil {
 		return *factura, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return *factura, errors.New("no se encontro ningun factura")
 	}
 
 	return *factura, nil

@@ -32,7 +32,20 @@ func (h *ClienteHandler) CreateCliente(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(clienteCreated)
+	json.NewEncoder(w).Encode(
+		map[string]string{
+			"message":    "Cliente created successfully",
+			"id":         strconv.Itoa(int(clienteCreated.ID)),
+			"rnc_cedula": h.RNC_Cedula,
+			"nombre":     h.Nombre,
+			"apellido":   h.Apellido,
+			"email":      h.Email,
+			"direccion":  h.Direccion,
+			"ciudad":     h.Ciudad,
+			"telefono":   h.Telefono,
+			"celular":    h.Celular,
+		},
+	)
 }
 
 func (h *ClienteHandler) GetAllCliente(w http.ResponseWriter, r *http.Request) {

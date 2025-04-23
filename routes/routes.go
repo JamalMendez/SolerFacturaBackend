@@ -20,12 +20,14 @@ func InitRouter() *mux.Router {
 	ncfHandler := handlers.NewNCFHandler()
 	productoHandler := handlers.NewProductoHandler()
 	clienteHandler := handlers.NewClienteHandler()
+	facturaHandler := handlers.NewFacturaHandler()
 
 	registerTipoProductoRoutes(r, tipoProductoHandler)
 	registerTipoPagoRoutes(r, tipoPagoHandler)
 	registerNCFRoutes(r, ncfHandler)
 	registerProductoRoutes(r, productoHandler)
 	registerClienteRoutes(r, clienteHandler)
+	registerFacturaRoutes(r, facturaHandler)
 
 	return router
 }
