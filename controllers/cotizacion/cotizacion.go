@@ -8,25 +8,25 @@ import (
 )
 
 type CotizacionDTO struct {
-	ID               uint
-	Serie            string
-	TipoPago         string
-	Cliente          string
-	CostoSubtotal    uint
-	CostoTotal       uint
-	Descuento        uint
-	Envio            uint
-	Descripcion      string
-	FechaCreacion    time.Time
-	FechaVencimiento time.Time
-	EnDolares        bool
+	ID            uint
+	Serie         string
+	TipoPago      string
+	Cliente       string
+	CostoSubtotal uint
+	CostoTotal    uint
+	Descuento     uint
+	Envio         uint
+	Descripcion   string
+	FechaCreacion time.Time
+	EnDolares     bool
 }
 
 type CotizacionDTOSend struct {
 	ID            uint
-	NCF           uint
-	TipoPago      uint
-	Cliente       uint
+	TipoPagoID    uint
+	ClienteID     uint
+	Secuencia     string
+	Cliente       string
 	CostoSubtotal uint
 	CostoTotal    uint
 	Descuento     uint
@@ -76,8 +76,7 @@ func GetAll() ([]CotizacionDTO, error) {
 			"cotizacions.descripcion," +
 			"cotizacions.en_dolares," +
 			"cotizacions.secuencia," +
-			"cotizacions.created_at," +
-			"cotizacions.fecha_vencimiento," +
+			"cotizacions.created_at FechaCreacion," +
 			"tipo_pagos.descripcion TipoPago").
 		Joins("left join tipo_pagos on tipo_pagos.id = cotizacions.tpo_id").
 		Scan(&cotizacions)
@@ -102,8 +101,7 @@ func GetById(id uint) (CotizacionDTO, error) {
 			"cotizacions.descripcion,"+
 			"cotizacions.en_dolares,"+
 			"cotizacions.secuencia,"+
-			"cotizacions.created_at,"+
-			"cotizacions.fecha_vencimiento,"+
+			"cotizacions.created_at FechaCreacion,"+
 			"tipo_pagos.descripcion TipoPago").
 		Joins("left join tipo_pagos on tipo_pagos.id = cotizacions.tpo_id").
 		Where("cotizacions.id = ?", id).Scan(cotizacion)
@@ -115,7 +113,7 @@ func GetById(id uint) (CotizacionDTO, error) {
 	return *cotizacion, nil
 }
 
-func Update(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, id uint, secuencia, cliente, descripcion string, enDolares bool, fechaVencimiento time.Time) error {
+func Update(cli_id, tpo_id, costoSubtotal, costoTotal, descuento, envio, id uint, secuencia, cliente, descripcion string, enDolares bool) error {
 	cotizacion := new(db_connection.Cotizacion)
 
 	result := db_connection.Db.Find(cotizacion, id)

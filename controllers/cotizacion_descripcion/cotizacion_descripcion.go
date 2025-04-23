@@ -2,7 +2,6 @@ package cotizacion_descripcion
 
 import (
 	"errors"
-	"fmt"
 
 	"ggstudios/solerfacturabackend/db_connection"
 )
@@ -18,30 +17,25 @@ type ProductoDTO struct {
 	ITBIS          bool
 }
 
-func Create(cotizacionId uint, productos []ProductoDTO) error {
-	cotizacions := make([]db_connection.CotizacionDesc, 0)
+func Create(cotizacionId uint, productos []ProductoDTO) ([]db_connection.CotizacionDesc, error) {
+	var cotizacions []db_connection.CotizacionDesc
 
 	for _, producto := range productos {
-		cotizacion := db_connection.CotizacionDesc{
+		cotizacions = append(cotizacions, db_connection.CotizacionDesc{
 			CotizacionID:  cotizacionId,
 			ProductoID:    producto.ID,
 			CostoUnitario: producto.CostoUnitario,
 			Cantidad:      producto.Cantidad,
 			TotalUnitario: producto.TotalUnitario,
 			ITBIS:         producto.ITBIS,
-		}
-		cotizacions = append(cotizacions, cotizacion)
+		})
 	}
 
-	result := db_connection.Db.Create(&cotizacions)
-
-	if result.Error != nil {
-		return result.Error
+	if err := db_connection.Db.Create(&cotizacions).Error; err != nil {
+		return nil, err
 	}
 
-	fmt.Println("Filas: ", result.RowsAffected)
-
-	return nil
+	return cotizacions, nil
 }
 
 func GetById(id uint) ([]ProductoDTO, error) {
@@ -55,7 +49,9 @@ func GetById(id uint) ([]ProductoDTO, error) {
 		return productos, result.Error
 	}
 
-	fmt.Println(productos)
+	if result.RowsAffected == 0 {
+		return productos, errors.New("no se encontraron productos para la cotizacion")
+	}
 
 	return productos, nil
 }
@@ -65,7 +61,7 @@ func Update(cotizacionId uint, productos []ProductoDTO) error {
 		return errors.New("no se pudo eliminar los productos de la cotizacion")
 	}
 
-	if err := Create(cotizacionId, productos); err != nil {
+	if _, err := Create(cotizacionId, productos); err != nil {
 		return errors.New("no se pudo crear los productos de la cotizacion")
 	}
 

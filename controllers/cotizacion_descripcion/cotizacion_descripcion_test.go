@@ -45,7 +45,7 @@ func TestCreate(t *testing.T) {
 			ITBIS:          false,
 		},
 	}
-	err := Create(2, productos)
+	_, err := Create(2, productos)
 	if err != nil {
 		fmt.Println("Error:", err)
 	} else {
