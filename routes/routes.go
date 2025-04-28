@@ -6,10 +6,18 @@ import (
 	"ggstudios/solerfacturabackend/handlers"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
-func InitRouter() *mux.Router {
+func InitRouter() http.Handler {
 	router := mux.NewRouter()
+
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
 
 	r := router.PathPrefix("/api/v1").Subrouter()
 
@@ -31,7 +39,7 @@ func InitRouter() *mux.Router {
 	registerFacturaRoutes(r, facturaHandler)
 	registerCotizacionRoutes(r, cotizacionHandler)
 
-	return router
+	return c.Handler(router)
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
