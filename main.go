@@ -13,7 +13,7 @@ func main() {
 
 	router := routes.InitRouter()
 
-	port := ":8080"
+	port := "0.0.0.0:8080"
 	log.Printf("Server running on port %s", port)
 	log.Fatal(http.ListenAndServe(port, router))
 }
